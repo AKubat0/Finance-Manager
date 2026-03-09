@@ -17,7 +17,10 @@ public class Main {
             System.out.println("2. Add Expense");
             System.out.println("3. Display Total");
             System.out.println("4. Display History");
-            System.out.println("5. Exit");
+            System.out.println("5. Display Expense Breakdown");
+            System.out.println("6. Clear All Transactions");
+            System.out.println("7. Delete a Transaction by number");
+            System.out.println("8. Exit");
 
             int choice = 0;
             boolean validInput  = false;
@@ -117,8 +120,48 @@ public class Main {
                 case 4:
                     fm.displayHistory();
                     break;
-
+                
                 case 5:
+                    fm.displayExpenseBreakdown();
+                    break;
+
+                case 6:
+                    while (true) { 
+                        System.out.println("Are you sure you want to clear all transactions? This action cannot be undone. (yes/no)");
+                        String decision = scanner.nextLine();
+                        if (decision.equalsIgnoreCase("yes")) {
+                            fm.clearAllTransactions();
+                            break;
+                        } else if (decision.equalsIgnoreCase("no")) {
+                            break;
+                        } else {
+                            System.out.println("Invalid choice. Please enter 'yes' or 'no'.");
+                        }
+                    }
+                    break;
+
+                case 7: 
+                    fm.displayHistory();
+                    int indexToDelete = -1;
+                    while (true) { 
+                        try {
+                            System.out.print("Enter the number of the transaction to delete (or 0 to cancel): ");
+                            indexToDelete = scanner.nextInt();
+                            scanner.nextLine(); // Consume newline
+                            if (indexToDelete == 0) {
+                                break; // Cancel deletion
+                            }
+                            if (fm.clearTransaction(indexToDelete - 1)) {
+                                break; // Successfully deleted, exit loop
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a valid transaction number.");
+                            scanner.nextLine(); // Clear the invalid input
+                        }
+                    }
+                    break;
+
+                case 8:
                     System.out.println("Exiting...");
                     scanner.close();
                     fm.saveTransactions();
